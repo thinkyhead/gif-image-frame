@@ -41,36 +41,109 @@ class GIFImageFrameInvocation(BaseInvocation):
     crop: bool = InputField(default=False, description="Crop to fit, otherwise pad with white")
 
     def gif_image_frame(self, image_path:str, frame_index:int, scale:float, width:int, height:int, crop:bool) -> Image.Image:
-        # Get the specified frame from the GIF image
-        try:
-            gif_img = Image.open(os.path.expanduser(image_path))
-        except Exception as e:
-            raise ValueError(f"No GIF (or PNG) image found at {image_path}")
+        CONVERTERS = Literal["pillow", "ffmpeg", "imagemagick", "imageio"]
+        THE_CONVERTER: CONVERTERS = "pillow"
+        USE_TEMP_FILES = False
 
-        # Check if the requested frame is within the range of the image
-        frame_count = gif_img.n_frames
-        if frame_index < 0 or frame_index >= frame_count:
-            raise ValueError(f"Frame {frame_index} is out of range (0-{frame_count-1}) for image {image_path}")
+        # Expand ~ if present
+        input_path = os.path.expanduser(image_path)
 
-        # Try to get the requested frame from the image
-        try:
-            gif_img.seek(frame_index)
-            img = gif_img.copy()
-        except Exception as e:
-            raise ValueError(f"Failed to read frame {frame_index} from image {image_path}")
+        if THE_CONVERTER == "pillow":
+            # Get the specified frame from the GIF image
+            try:
+                gif_img = Image.open(input_path)
+            except Exception as e:
+                raise ValueError(f"No GIF (or PNG) image found at {image_path}")
 
-        # If width and height are given resize the image with PIL
-        if width > 0 and height > 0:
-            func = ImageOps.fit if crop else ImageOps.pad
-            scaler = Image.LANCZOS if (width < img.size[0] or height < img.size[1]) else Image.BICUBIC
-            img = func(img, (width, height), scaler)
+            # Check if the requested frame is within the range of the image
+            frame_count = gif_img.n_frames
+            if frame_index < 0 or frame_index >= frame_count:
+                raise ValueError(f"Frame {frame_index} is out of range (0-{frame_count-1}) for image {image_path}")
 
-        # If a scale other than 1 is given, resize using simple scaling
-        elif scale != 1.0 and scale != 0.0:
-            box_size = (int(img.width * scale), int(img.height * scale))
-            img = img.resize(box_size, Image.LANCZOS if scale < 1.0 else Image.BICUBIC)
+            # Try to get the requested frame from the image
+            try:
+                gif_img.seek(frame_index)
+                img = gif_img.copy()
+            except Exception as e:
+                raise ValueError(f"Failed to read frame {frame_index} from image {image_path}")
 
-        return img
+            # If width and height are given resize the image with PIL
+            if width > 0 and height > 0:
+                func = ImageOps.fit if crop else ImageOps.pad
+                scaler = Image.LANCZOS if (width < img.size[0] or height < img.size[1]) else Image.BICUBIC
+                img = func(img, (width, height), scaler)
+
+            # If a scale other than 1 is given, resize using simple scaling
+            elif scale != 1.0 and scale != 0.0:
+                box_size = (int(img.width * scale), int(img.height * scale))
+                img = img.resize(box_size, Image.LANCZOS if scale < 1.0 else Image.BICUBIC)
+
+            return img
+
+        # If a command is set it will be run it to generate an image
+        command = None
+
+        if USE_TEMP_FILES:
+            # Consider using invoke's temp file support, if there is an API for that.
+            # This will allow the image to removed when invoke is clearing caches.
+            out_path = tempfile.mktemp(suffix=".png")
+        else:
+            # Create a new image name in the same folder as the input image
+            file_path, filename = os.path.split(input_path)
+            file_name, file_ext = os.path.splitext(filename)
+            out_path = f"{file_path}/{file_name}--{frame_index}.png"
+
+        extracted_frame_path = os.path.expanduser(out_path)
+
+        if os.path.exists(extracted_frame_path):
+
+            # If the file already exists, return it by default (for other methods)
+            pass
+
+        elif THE_CONVERTER == "ffmpeg":
+            #
+            # ffmpeg -i image_path
+            #        -vsync vfr
+            #        -q:v 2
+            #        -vf "select='eq(n,frame_index)',scale=iw*scale:ih*scale"
+            #        extracted_frame_path
+            #
+
+            filter = f"select='eq(n,{frame_index})'"
+            if scale != 1.0: filter += f",scale=iw*{scale}:ih*{scale}"
+
+            # ffmpeg command to generate an image at extracted_frame_path
+            # TODO: Add fitting within the width and height (if not 0)
+            command = [
+                "ffmpeg",
+                "-i", input_path,       # Input file path
+                "-vf", filter,          # Frame index, optional scaling
+                "-vsync", "vfr",        # Prevent frame drops (Variable Frame Rate) by duplicating / dropping frames as needed.
+                "-q:v", "2",            # Output Quality 2 (good)
+                extracted_frame_path    # Output file path
+            ]
+
+        elif THE_CONVERTER == "imagemagick":
+            #
+            # Use ImageMagick 'convert' to extract frame 'frame_index' from the GIF at 'image_path'
+            #   convert image_path[frame_index] extracted_frame_path
+            # To scale the frame before export, use:
+            #   convert image_path[frame_index] -resize scale% extracted_frame_path
+            #
+            # TODO: Add fitting within the given box_size (if not 0,0)
+            #
+            command = [ "convert", input_path + f"[{frame_index}]" ]
+            if scale != 1.0: command += [ "-resize", f"{scale*100}%" ]
+            command += [ extracted_frame_path ]
+
+        else:
+            raise Exception("No image extraction method selected")
+
+        if command:
+            print(f"Running command: {' '.join(command)}")
+            result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            print(f"\nResult: {result}\n")
+            return Image.open(extracted_frame_path)
 
     def invoke(self, context: InvocationContext) -> ImageOutput:
         image_out = self.gif_image_frame(self.image_path, self.frame_index, self.scale, self.width, self.height, self.crop)
