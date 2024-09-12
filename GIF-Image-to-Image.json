@@ -1,0 +1,791 @@
+{
+  "name": "GIF Image to Image",
+  "author": "Thinkyhead",
+  "description": "Load a frame from a GIF image and apply a basic image-to-image.",
+  "version": "",
+  "contact": "",
+  "tags": "",
+  "notes": "",
+  "exposedFields": [],
+  "meta": {
+    "version": "3.0.0",
+    "category": "user"
+  },
+  "id": "837a3b6a-dcac-40a9-8e56-1c7366722eef",
+  "nodes": [
+    {
+      "id": "b586895b-d0e5-4180-afd4-c74ccbff9496",
+      "type": "invocation",
+      "data": {
+        "id": "b586895b-d0e5-4180-afd4-c74ccbff9496",
+        "type": "float",
+        "version": "1.0.1",
+        "label": "Denoising Strength",
+        "notes": "",
+        "isOpen": true,
+        "isIntermediate": true,
+        "useCache": true,
+        "inputs": {
+          "value": {
+            "name": "value",
+            "label": "",
+            "value": 0.2
+          }
+        }
+      },
+      "position": {
+        "x": 581.9493028002865,
+        "y": 2916.6456246921607
+      }
+    },
+    {
+      "id": "95c9b88f-1418-499c-ab9f-e4a79e87a93c",
+      "type": "invocation",
+      "data": {
+        "id": "95c9b88f-1418-499c-ab9f-e4a79e87a93c",
+        "type": "float_math",
+        "version": "1.0.1",
+        "label": "",
+        "notes": "",
+        "isOpen": true,
+        "isIntermediate": true,
+        "useCache": true,
+        "inputs": {
+          "operation": {
+            "name": "operation",
+            "label": "",
+            "value": "SUB"
+          },
+          "a": {
+            "name": "a",
+            "label": "",
+            "value": 1
+          },
+          "b": {
+            "name": "b",
+            "label": "",
+            "value": 1
+          }
+        }
+      },
+      "position": {
+        "x": 1212.0374431159958,
+        "y": 2710.962139258032
+      }
+    },
+    {
+      "id": "5e6fc8ca-f4ef-40b7-8517-40b42ffbd111",
+      "type": "invocation",
+      "data": {
+        "id": "5e6fc8ca-f4ef-40b7-8517-40b42ffbd111",
+        "type": "rand_int",
+        "version": "1.0.1",
+        "label": "Random Seed",
+        "notes": "",
+        "isOpen": true,
+        "isIntermediate": true,
+        "useCache": false,
+        "inputs": {
+          "low": {
+            "name": "low",
+            "label": "",
+            "value": 0
+          },
+          "high": {
+            "name": "high",
+            "label": "High",
+            "value": 4294967295
+          }
+        }
+      },
+      "position": {
+        "x": 1586.52313877908,
+        "y": 2121.229849154147
+      }
+    },
+    {
+      "id": "ed07eadd-071f-480d-b143-bb177b9a98db",
+      "type": "invocation",
+      "data": {
+        "id": "ed07eadd-071f-480d-b143-bb177b9a98db",
+        "type": "GIF_Image_Frame",
+        "version": "1.0.0",
+        "label": "",
+        "notes": "",
+        "isOpen": true,
+        "isIntermediate": true,
+        "useCache": false,
+        "inputs": {
+          "image_path": {
+            "name": "image_path",
+            "label": "",
+            "value": "~/Downloads/this-is-fine-its-fine.gif"
+          },
+          "frame_index": {
+            "name": "frame_index",
+            "label": "",
+            "value": 0
+          },
+          "scale": {
+            "name": "scale",
+            "label": "",
+            "value": 1
+          },
+          "width": {
+            "name": "width",
+            "label": "",
+            "value": 512
+          },
+          "height": {
+            "name": "height",
+            "label": "",
+            "value": 574
+          },
+          "crop": {
+            "name": "crop",
+            "label": "",
+            "value": false
+          }
+        }
+      },
+      "position": {
+        "x": 186.83452230470175,
+        "y": 2332.6350231621973
+      }
+    },
+    {
+      "id": "main_model_loader",
+      "type": "invocation",
+      "data": {
+        "id": "main_model_loader",
+        "type": "main_model_loader",
+        "version": "1.0.3",
+        "label": "",
+        "notes": "",
+        "isOpen": true,
+        "isIntermediate": true,
+        "useCache": true,
+        "inputs": {
+          "model": {
+            "name": "model",
+            "label": "",
+            "value": {
+              "key": "ead15b89-fee4-4a15-ba81-68ff55c260bb",
+              "hash": "blake3:78261bcdcbf1ddaebd8658e58e7b68d111d835fc42c8dc7f17c157c52290d37c",
+              "name": "SD 1.5",
+              "base": "sd-1",
+              "type": "main"
+            }
+          }
+        }
+      },
+      "position": {
+        "x": -277.79671901270854,
+        "y": 1627.8308587778588
+      }
+    },
+    {
+      "id": "clip_skip",
+      "type": "invocation",
+      "data": {
+        "id": "clip_skip",
+        "type": "clip_skip",
+        "version": "1.1.0",
+        "label": "",
+        "notes": "",
+        "isOpen": true,
+        "isIntermediate": true,
+        "useCache": true,
+        "inputs": {
+          "clip": {
+            "name": "clip",
+            "label": "",
+            "value": null
+          },
+          "skipped_layers": {
+            "name": "skipped_layers",
+            "label": "",
+            "value": 0
+          }
+        }
+      },
+      "position": {
+        "x": 86.88402794210407,
+        "y": 1873.066615769532
+      }
+    },
+    {
+      "id": "positive_conditioning",
+      "type": "invocation",
+      "data": {
+        "id": "positive_conditioning",
+        "type": "compel",
+        "version": "1.2.0",
+        "label": "",
+        "notes": "",
+        "isOpen": true,
+        "isIntermediate": true,
+        "useCache": true,
+        "inputs": {
+          "prompt": {
+            "name": "prompt",
+            "label": "",
+            "value": "Comic illustration of a cartoon dog sitting on a white wooden stool in a small interior room surrounded by fire. the dog is holding a coffee cup."
+          },
+          "clip": {
+            "name": "clip",
+            "label": "",
+            "value": null
+          },
+          "mask": {
+            "name": "mask",
+            "label": "",
+            "value": null
+          }
+        }
+      },
+      "position": {
+        "x": 580.9073959026068,
+        "y": 2386.1155828313736
+      }
+    },
+    {
+      "id": "negative_conditioning",
+      "type": "invocation",
+      "data": {
+        "id": "negative_conditioning",
+        "type": "compel",
+        "version": "1.2.0",
+        "label": "",
+        "notes": "",
+        "isOpen": true,
+        "isIntermediate": true,
+        "useCache": true,
+        "inputs": {
+          "prompt": {
+            "name": "prompt",
+            "label": "",
+            "value": ""
+          },
+          "clip": {
+            "name": "clip",
+            "label": "",
+            "value": null
+          },
+          "mask": {
+            "name": "mask",
+            "label": "",
+            "value": null
+          }
+        }
+      },
+      "position": {
+        "x": 581.6780805741004,
+        "y": 2648.9874741215704
+      }
+    },
+    {
+      "id": "noise",
+      "type": "invocation",
+      "data": {
+        "id": "noise",
+        "type": "noise",
+        "version": "1.0.2",
+        "label": "",
+        "notes": "",
+        "isOpen": false,
+        "isIntermediate": true,
+        "useCache": true,
+        "inputs": {
+          "seed": {
+            "name": "seed",
+            "label": "",
+            "value": 845938612
+          },
+          "width": {
+            "name": "width",
+            "label": "Width",
+            "value": 680
+          },
+          "height": {
+            "name": "height",
+            "label": "",
+            "value": 384
+          },
+          "use_cpu": {
+            "name": "use_cpu",
+            "label": "",
+            "value": true
+          }
+        }
+      },
+      "position": {
+        "x": 1586.3726470164993,
+        "y": 2332.8170932673984
+      }
+    },
+    {
+      "id": "denoise_latents",
+      "type": "invocation",
+      "data": {
+        "id": "denoise_latents",
+        "type": "denoise_latents",
+        "version": "1.5.3",
+        "label": "",
+        "notes": "",
+        "isOpen": true,
+        "isIntermediate": true,
+        "useCache": true,
+        "inputs": {
+          "positive_conditioning": {
+            "name": "positive_conditioning",
+            "label": "",
+            "value": null
+          },
+          "negative_conditioning": {
+            "name": "negative_conditioning",
+            "label": "",
+            "value": null
+          },
+          "noise": {
+            "name": "noise",
+            "label": "",
+            "value": null
+          },
+          "steps": {
+            "name": "steps",
+            "label": "",
+            "value": 8
+          },
+          "cfg_scale": {
+            "name": "cfg_scale",
+            "label": "",
+            "value": 1.2
+          },
+          "denoising_start": {
+            "name": "denoising_start",
+            "label": "",
+            "value": 0.75
+          },
+          "denoising_end": {
+            "name": "denoising_end",
+            "label": "",
+            "value": 1
+          },
+          "scheduler": {
+            "name": "scheduler",
+            "label": "",
+            "value": "lcm"
+          },
+          "unet": {
+            "name": "unet",
+            "label": "",
+            "value": null
+          },
+          "control": {
+            "name": "control",
+            "label": "",
+            "value": null
+          },
+          "ip_adapter": {
+            "name": "ip_adapter",
+            "label": "",
+            "value": null
+          },
+          "t2i_adapter": {
+            "name": "t2i_adapter",
+            "label": "",
+            "value": null
+          },
+          "cfg_rescale_multiplier": {
+            "name": "cfg_rescale_multiplier",
+            "label": "",
+            "value": 0
+          },
+          "latents": {
+            "name": "latents",
+            "label": "",
+            "value": null
+          },
+          "denoise_mask": {
+            "name": "denoise_mask",
+            "label": "",
+            "value": null
+          }
+        }
+      },
+      "position": {
+        "x": 1592.3379498485974,
+        "y": 2395.1770550684296
+      }
+    },
+    {
+      "id": "latents_to_image",
+      "type": "invocation",
+      "data": {
+        "id": "latents_to_image",
+        "type": "l2i",
+        "version": "1.3.0",
+        "label": "",
+        "notes": "",
+        "isOpen": true,
+        "isIntermediate": false,
+        "useCache": false,
+        "inputs": {
+          "board": {
+            "name": "board",
+            "label": ""
+          },
+          "metadata": {
+            "name": "metadata",
+            "label": "",
+            "value": null
+          },
+          "latents": {
+            "name": "latents",
+            "label": "",
+            "value": null
+          },
+          "vae": {
+            "name": "vae",
+            "label": "",
+            "value": null
+          },
+          "tiled": {
+            "name": "tiled",
+            "label": "",
+            "value": false
+          },
+          "tile_size": {
+            "name": "tile_size",
+            "label": "",
+            "value": 0
+          },
+          "fp32": {
+            "name": "fp32",
+            "label": "",
+            "value": true
+          }
+        }
+      },
+      "position": {
+        "x": 1977.4392376974333,
+        "y": 2364.643183644392
+      }
+    },
+    {
+      "id": "lora_loader_collect",
+      "type": "invocation",
+      "data": {
+        "id": "lora_loader_collect",
+        "type": "collect",
+        "version": "1.0.0",
+        "label": "",
+        "notes": "",
+        "isOpen": true,
+        "isIntermediate": true,
+        "useCache": true,
+        "inputs": {
+          "item": {
+            "name": "item",
+            "label": "",
+            "value": null
+          }
+        }
+      },
+      "position": {
+        "x": -280.4850953843327,
+        "y": 2044.2564865866075
+      }
+    },
+    {
+      "id": "lora_loader",
+      "type": "invocation",
+      "data": {
+        "id": "lora_loader",
+        "type": "lora_collection_loader",
+        "version": "1.0.0",
+        "label": "",
+        "notes": "",
+        "isOpen": true,
+        "isIntermediate": true,
+        "useCache": true,
+        "inputs": {
+          "loras": {
+            "name": "loras",
+            "label": "",
+            "value": null
+          },
+          "unet": {
+            "name": "unet",
+            "label": "",
+            "value": null
+          },
+          "clip": {
+            "name": "clip",
+            "label": "",
+            "value": null
+          }
+        }
+      },
+      "position": {
+        "x": 88.88527077527453,
+        "y": 2035.2760533137432
+      }
+    },
+    {
+      "id": "lora_loader_d0091c58-30d5-41fe-a4c9-083b2cef883d",
+      "type": "invocation",
+      "data": {
+        "id": "lora_loader_d0091c58-30d5-41fe-a4c9-083b2cef883d",
+        "type": "lora_selector",
+        "version": "1.0.1",
+        "label": "",
+        "notes": "",
+        "isOpen": true,
+        "isIntermediate": true,
+        "useCache": true,
+        "inputs": {
+          "lora": {
+            "name": "lora",
+            "label": "",
+            "value": {
+              "key": "d0091c58-30d5-41fe-a4c9-083b2cef883d",
+              "hash": "blake3:d07d31701c4d354c6910228dd0fb785869aff4a4c70e1d677ee459859f36a6fb",
+              "name": "LCM 1.5",
+              "base": "sd-1",
+              "type": "lora",
+              "submodel_type": null
+            }
+          },
+          "weight": {
+            "name": "weight",
+            "label": "",
+            "value": 0.75
+          }
+        }
+      },
+      "position": {
+        "x": -283.57186009528937,
+        "y": 1832.1276982202503
+      }
+    },
+    {
+      "id": "image_to_latents",
+      "type": "invocation",
+      "data": {
+        "id": "image_to_latents",
+        "type": "i2l",
+        "version": "1.1.0",
+        "label": "",
+        "notes": "",
+        "isOpen": true,
+        "isIntermediate": true,
+        "useCache": true,
+        "inputs": {
+          "image": {
+            "name": "image",
+            "label": "",
+            "value": {
+              "image_name": "68c2f810-0917-449a-8034-60e47c5c27a3.png"
+            }
+          },
+          "vae": {
+            "name": "vae",
+            "label": "",
+            "value": null
+          },
+          "tiled": {
+            "name": "tiled",
+            "label": "",
+            "value": false
+          },
+          "tile_size": {
+            "name": "tile_size",
+            "label": "",
+            "value": 0
+          },
+          "fp32": {
+            "name": "fp32",
+            "label": "",
+            "value": true
+          }
+        }
+      },
+      "position": {
+        "x": 1207.5879430777945,
+        "y": 2371.010555878618
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "reactflow__edge-95c9b88f-1418-499c-ab9f-e4a79e87a93cvalue-denoise_latentsdenoising_start",
+      "type": "default",
+      "source": "95c9b88f-1418-499c-ab9f-e4a79e87a93c",
+      "target": "denoise_latents",
+      "sourceHandle": "value",
+      "targetHandle": "denoising_start"
+    },
+    {
+      "id": "reactflow__edge-b586895b-d0e5-4180-afd4-c74ccbff9496value-95c9b88f-1418-499c-ab9f-e4a79e87a93cb",
+      "type": "default",
+      "source": "b586895b-d0e5-4180-afd4-c74ccbff9496",
+      "target": "95c9b88f-1418-499c-ab9f-e4a79e87a93c",
+      "sourceHandle": "value",
+      "targetHandle": "b"
+    },
+    {
+      "id": "reactflow__edge-5e6fc8ca-f4ef-40b7-8517-40b42ffbd111value-noiseseed",
+      "type": "default",
+      "source": "5e6fc8ca-f4ef-40b7-8517-40b42ffbd111",
+      "target": "noise",
+      "sourceHandle": "value",
+      "targetHandle": "seed"
+    },
+    {
+      "id": "reactflow__edge-negative_conditioningconditioning-denoise_latentsnegative_conditioning",
+      "type": "default",
+      "source": "negative_conditioning",
+      "target": "denoise_latents",
+      "sourceHandle": "conditioning",
+      "targetHandle": "negative_conditioning"
+    },
+    {
+      "id": "reactflow__edge-positive_conditioningconditioning-denoise_latentspositive_conditioning",
+      "type": "default",
+      "source": "positive_conditioning",
+      "target": "denoise_latents",
+      "sourceHandle": "conditioning",
+      "targetHandle": "positive_conditioning"
+    },
+    {
+      "id": "reactflow__edge-ed07eadd-071f-480d-b143-bb177b9a98dbimage-image_to_latentsimage",
+      "type": "default",
+      "source": "ed07eadd-071f-480d-b143-bb177b9a98db",
+      "target": "image_to_latents",
+      "sourceHandle": "image",
+      "targetHandle": "image"
+    },
+    {
+      "id": "c854e83b-cdd8-4ac8-9d52-010b687e8543",
+      "type": "default",
+      "source": "main_model_loader",
+      "target": "clip_skip",
+      "sourceHandle": "clip",
+      "targetHandle": "clip"
+    },
+    {
+      "id": "bfdf98dd-2eae-4b4b-b809-00f83b7a5061",
+      "type": "default",
+      "source": "noise",
+      "target": "denoise_latents",
+      "sourceHandle": "noise",
+      "targetHandle": "noise"
+    },
+    {
+      "id": "b7e35b15-43e4-47c0-9928-a6574bc8e938",
+      "type": "default",
+      "source": "denoise_latents",
+      "target": "latents_to_image",
+      "sourceHandle": "latents",
+      "targetHandle": "latents"
+    },
+    {
+      "id": "c3ab83e6-ad33-4da1-a88b-ac0c9cfe75e8",
+      "type": "default",
+      "source": "lora_loader_collect",
+      "target": "lora_loader",
+      "sourceHandle": "collection",
+      "targetHandle": "loras"
+    },
+    {
+      "id": "83812f42-1e25-4483-8e05-1e4be4191dfa",
+      "type": "default",
+      "source": "main_model_loader",
+      "target": "lora_loader",
+      "sourceHandle": "unet",
+      "targetHandle": "unet"
+    },
+    {
+      "id": "5891cdd8-920f-4730-b5ef-a390762fbc8c",
+      "type": "default",
+      "source": "clip_skip",
+      "target": "lora_loader",
+      "sourceHandle": "clip",
+      "targetHandle": "clip"
+    },
+    {
+      "id": "4ff48666-ed55-4f0f-becd-30d06d5d012a",
+      "type": "default",
+      "source": "lora_loader",
+      "target": "denoise_latents",
+      "sourceHandle": "unet",
+      "targetHandle": "unet"
+    },
+    {
+      "id": "0d348168-07a9-4833-9968-6e26fb71bbad",
+      "type": "default",
+      "source": "lora_loader",
+      "target": "positive_conditioning",
+      "sourceHandle": "clip",
+      "targetHandle": "clip"
+    },
+    {
+      "id": "2cf0e64b-7849-4d37-b129-efb6a35b1b8b",
+      "type": "default",
+      "source": "lora_loader",
+      "target": "negative_conditioning",
+      "sourceHandle": "clip",
+      "targetHandle": "clip"
+    },
+    {
+      "id": "9f7b8a57-d639-4767-a4df-407df849e9e8",
+      "type": "default",
+      "source": "lora_loader_d0091c58-30d5-41fe-a4c9-083b2cef883d",
+      "target": "lora_loader_collect",
+      "sourceHandle": "lora",
+      "targetHandle": "item"
+    },
+    {
+      "id": "bf3530f2-9ced-43b7-8707-38617523d7df",
+      "type": "default",
+      "source": "main_model_loader",
+      "target": "latents_to_image",
+      "sourceHandle": "vae",
+      "targetHandle": "vae"
+    },
+    {
+      "id": "5270ceb1-d55b-42e8-b91b-58259ca0d666",
+      "type": "default",
+      "source": "image_to_latents",
+      "target": "denoise_latents",
+      "sourceHandle": "latents",
+      "targetHandle": "latents"
+    },
+    {
+      "id": "14f60eb9-4ddd-4f00-973b-04fdff5458c4",
+      "type": "default",
+      "source": "main_model_loader",
+      "target": "image_to_latents",
+      "sourceHandle": "vae",
+      "targetHandle": "vae"
+    },
+    {
+      "id": "e69aa906-35c2-4cd2-8b3b-79545a8b17ce",
+      "type": "default",
+      "source": "image_to_latents",
+      "target": "noise",
+      "sourceHandle": "width",
+      "targetHandle": "width"
+    },
+    {
+      "id": "aad72da8-bbf5-41e5-99f4-2a4268469864",
+      "type": "default",
+      "source": "image_to_latents",
+      "target": "noise",
+      "sourceHandle": "height",
+      "targetHandle": "height"
+    }
+  ]
+}
